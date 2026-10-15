@@ -1,0 +1,536 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  font-family: 'Nunito', sans-serif;
+  color: #563148;
+  background: #fff7f8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 28px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background:
+    radial-gradient(circle at 8% 15%, #ffe0eb 0, transparent 27%),
+    radial-gradient(circle at 92% 75%, #ffedc7 0, transparent 28%),
+    linear-gradient(145deg, #fff9f5, #fff2f7);
+}
+
+/* Brand header */
+
+.brand {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.brand-logo {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 8px;
+  border: 2px solid #f6c85f;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 5px 14px #e9a4c044;
+  font-size: 31px;
+  transform: rotate(-5deg);
+}
+
+.brand h1 {
+  margin: 0;
+  color: #e84d8b;
+  font-size: clamp(27px, 5vw, 39px);
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  line-height: 1.15;
+}
+
+.tagline {
+  margin: 6px 0 0;
+  color: #987087;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+
+/* Main game card */
+
+.game-card {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  padding: 32px 24px 27px;
+  overflow: hidden;
+  border: 1px solid #f9dce8;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 50px #bd70901c;
+  text-align: center;
+}
+
+.decor {
+  position: absolute;
+  color: #f3c45e;
+  font-size: 30px;
+}
+
+.decor-left {
+  top: 22px;
+  left: 20px;
+}
+
+.decor-right {
+  top: 65px;
+  right: 22px;
+  color: #eaa2c2;
+}
+
+.intro {
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  color: #d7779f;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.intro h2 {
+  margin: 7px 0 6px;
+  color: #59334d;
+  font-size: clamp(28px, 5vw, 36px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.intro p {
+  max-width: 330px;
+  margin: 0 auto;
+  color: #92758a;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Wheel */
+
+.wheel-area {
+  position: relative;
+  width: min(100%, 390px);
+  aspect-ratio: 1;
+  margin: 0 auto 28px;
+  padding: 9px;
+}
+
+.wheel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 6px solid #fff;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 4px #f2c45e,
+    0 10px 24px #8e527122;
+  transition: transform 5s cubic-bezier(0.12, 0.75, 0.12, 1);
+  will-change: transform;
+}
+
+.wheel-label {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.prize-emoji {
+  position: absolute;
+  top: 9%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(14px, 3.5vw, 21px);
+  line-height: 1;
+}
+
+.prize-name {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  width: 30%;
+  color: #543147;
+  font-size: clamp(8px, 1.8vw, 10px);
+  font-weight: 900;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+  text-shadow: 0 1px 0 #ffffff55;
+}
+
+/* Bubble Jellyy centre badge */
+
+.wheel-center {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  width: 94px;
+  height: 94px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  border: 5px solid #fff;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fffdfb, #ffe8f0);
+  box-shadow:
+    0 0 0 3px #f0c25b,
+    0 4px 15px #75465a30;
+}
+
+.center-icon {
+  margin-bottom: 1px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.center-brand {
+  color: #e44885;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+}
+
+.center-sparkle {
+  position: absolute;
+  right: 7px;
+  bottom: 9px;
+  color: #e6b23f;
+  font-size: 12px;
+}
+
+/* Pointer */
+
+.pointer {
+  position: absolute;
+  z-index: 8;
+  top: -1px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translateX(-50%);
+  border-top: 30px solid #e74b88;
+  border-right: 17px solid transparent;
+  border-left: 17px solid transparent;
+  filter: drop-shadow(0 3px 2px #59334d30);
+}
+
+/* Spin button */
+
+.spin-button {
+  width: 100%;
+  max-width: 290px;
+  min-height: 54px;
+  padding: 14px 24px;
+  border: 2px solid #fff;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #f36a9f, #e64282);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #bd3268, 0 10px 20px #e74b8830;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.spin-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 #bd3268, 0 13px 22px #e74b8830;
+}
+
+.spin-button:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #bd3268;
+}
+
+.spin-button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.footnote {
+  margin: 20px 0 0;
+  color: #9b7d91;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Result popup */
+
+.result-overlay {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #3f263bbd;
+  backdrop-filter: blur(5px);
+}
+
+.result-card {
+  position: relative;
+  width: 100%;
+  max-width: 370px;
+  padding: 32px 24px 27px;
+  border: 3px solid #f4cd6e;
+  border-radius: 28px;
+  background: linear-gradient(150deg, #fff, #fff4f7);
+  box-shadow: 0 22px 65px #24101d50;
+  text-align: center;
+  animation: result-appear 0.3s ease-out;
+}
+
+.result-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: transparent;
+  color: #98758b;
+  font-size: 29px;
+  cursor: pointer;
+}
+
+.result-icon {
+  margin-bottom: 10px;
+  font-size: 52px;
+}
+
+.result-eyebrow {
+  margin: 0 0 7px;
+  color: #c47a9c;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.result-card h3 {
+  margin: 0 0 10px;
+  color: #e44885;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.result-message {
+  margin: 0 0 8px;
+  color: #5f3d54;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.result-thanks {
+  margin: 0 0 22px;
+  color: #9b7d91;
+  font-size: 12px;
+}
+
+.awesome-button {
+  padding: 12px 27px;
+  border: none;
+  border-radius: 30px;
+  background: #f4ca68;
+  color: #5a354b;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #d9a840;
+}
+
+.awesome-button:hover {
+  background: #ffda7b;
+}
+
+@keyframes result-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.86) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Footer */
+
+.footer {
+  margin-top: 23px;
+  text-align: center;
+}
+
+.footer p {
+  margin: 0 0 4px;
+  color: #a27a91;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.footer span {
+  color: #c59baf;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+/* Mobile responsive layout */
+
+@media (max-width: 480px) {
+  .page {
+    padding: 20px 12px;
+  }
+
+  .brand {
+    margin-bottom: 20px;
+  }
+
+  .brand-logo {
+    width: 50px;
+    height: 50px;
+    font-size: 27px;
+  }
+
+  .brand h1 {
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+
+  .tagline {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .game-card {
+    padding: 28px 12px 24px;
+    border-radius: 25px;
+  }
+
+  .intro {
+    margin-bottom: 22px;
+  }
+
+  .intro p {
+    font-size: 12px;
+  }
+
+  .wheel-area {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 24px;
+  }
+
+  .wheel {
+    border-width: 5px;
+  }
+
+  .prize-emoji {
+    top: 9%;
+    font-size: clamp(12px, 3.8vw, 17px);
+  }
+
+  .prize-name {
+    top: 25%;
+    width: 29%;
+    font-size: clamp(7px, 2vw, 9px);
+    line-height: 1.1;
+  }
+
+  .wheel-center {
+    width: 76px;
+    height: 76px;
+    border-width: 4px;
+  }
+
+  .center-icon {
+    font-size: 18px;
+  }
+
+  .center-brand {
+    font-size: 9px;
+  }
+
+  .pointer {
+    border-top-width: 27px;
+    border-right-width: 14px;
+    border-left-width: 14px;
+  }
+
+  .spin-button {
+    min-height: 50px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 350px) {
+  .brand h1 {
+    font-size: 25px;
+  }
+
+  .game-card {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .prize-name {
+    font-size: 7px;
+  }
+
+  .wheel-center {
+    width: 66px;
+    height: 66px;
+  }
+
+  .center-icon {
+    font-size: 16px;
+  }
+
+  .center-brand {
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wheel {
+    transition-duration: 0.01ms;
+  }
+
+  .result-card {
+    animation: none;
+  }
+}
