@@ -3,20 +3,151 @@ import { useState } from "react";
 import "./App.css";
 
 const prizes = [
-  { label: "FREE BOBA", result: "You won a FREE BOBA!", emoji: "🧋", color: "#F8A9C4" },
-  { label: "FREE SOFTIE", result: "You won a FREE SOFTIE!", emoji: "🍦", color: "#FFE4A7" },
-  { label: "30% OFF", result: "You won 30% OFF!", emoji: "🎉", color: "#C8B0F5" },
-  { label: "FREE MIXER", result: "You won a FREE MIXER!", emoji: "🥤", color: "#A8E3D2" },
-  { label: "25% OFF", result: "You won 25% OFF!", emoji: "💗", color: "#F8A9C4" },
-  { label: "TRY AGAIN", result: "Better luck next time!", emoji: "🍀", color: "#FFE4A7" },
-  { label: "SPIN AGAIN", result: "Give it another spin!", emoji: "🔄", color: "#C8B0F5" },
-  { label: "BUY & TRY", result: "Buy a drink and try again!", emoji: "🛍️", color: "#A8E3D2" },
+  {
+    id: "buy-try",
+    label: "Buy and Try Again",
+    emoji: "😜",
+    color: "#A8E3D2",
+    probability: 30,
+    result: "Buy and Try Again",
+  },
+  {
+    id: "better-luck",
+    label: "Better Luck Next Time",
+    emoji: "🍀",
+    color: "#FFE4A7",
+    probability: 25,
+    result: "Better Luck Next Time",
+  },
+  {
+    id: "spin-again",
+    label: "Sorry, Spin Again",
+    emoji: "🔄",
+    color: "#C8B0F5",
+    probability: 20,
+    result: "Sorry, Spin Again",
+  },
+  {
+    id: "follow-discount",
+    label: "Follow + Get 25% OFF",
+    emoji: "📲",
+    color: "#F8A9C4",
+    probability: 10,
+    result:
+      "Follow + Get 25% OFF",
+  },
+  {
+    id: "story-discount",
+    label:
+      "Follow Us + Story + Get 30% OFF",
+    emoji: "📸",
+    color: "#FFE4A7",
+    probability: 7,
+    result:
+      "Follow Us + Story + Get 30% OFF",
+  },
+  {
+    id: "free-softie",
+    label: "Softie FREE",
+    emoji: "🍦",
+    color: "#C8B0F5",
+    probability: 5,
+    result: "Softie FREE",
+  },
+  {
+    id: "free-boba",
+    label: "Boba Milk Tea FREE",
+    emoji: "🧋",
+    color: "#F8A9C4",
+    probability: 3,
+    result: "Boba Milk Tea FREE",
+  },
 ];
 
+const totalProbability = prizes.reduce(
+  (total, prize) => total + prize.probability,
+  0
+);
+
+// Keep the three similar outcomes apart, including
+// the last and first segments of the circular wheel.
+const similarPrizeIds = new Set([
+  "buy-try",
+  "better-luck",
+  "spin-again",
+]);
+
+function shufflePrizes() {
+  const shuffled = [...prizes];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [
+      shuffled[j],
+      shuffled[i],
+    ];
+  }
+
+  return shuffled;
+}
+
+function hasAdjacentSimilarPrizes(order) {
+  return order.some((prize, index) => {
+    const nextPrize = order[(index + 1) % order.length];
+
+    return (
+      similarPrizeIds.has(prize.id) &&
+      similarPrizeIds.has(nextPrize.id)
+    );
+  });
+}
+
+function createWheelOrder() {
+  let order;
+
+  do {
+    order = shufflePrizes();
+  } while (hasAdjacentSimilarPrizes(order));
+
+  return order;
+}
+
+// Select the winning prize according to its probability,
+// independently of where it appears on the wheel.
+function getRandomPrize() {
+  const random = Math.random() * totalProbability;
+  let cumulativeProbability = 0;
+
+  for (const prize of prizes) {
+    cumulativeProbability += prize.probability;
+
+    if (random < cumulativeProbability) {
+      return prize;
+    }
+  }
+
+  return prizes[prizes.length - 1];
+}
+
 export default function App() {
+  const [wheelOrder] = useState(() => createWheelOrder());
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [winner, setWinner] = useState(null);
+
+  const sectionAngle = 360 / wheelOrder.length;
+
+  const wheelBackground = `conic-gradient(
+    from -${sectionAngle / 2}deg,
+    ${wheelOrder
+      .map(
+        (prize, index) =>
+          `${prize.color} ${index * sectionAngle}deg ${
+            (index + 1) * sectionAngle
+          }deg`
+      )
+      .join(", ")}
+  )`;
 
   function spinWheel() {
     if (spinning) return;
@@ -24,16 +155,18 @@ export default function App() {
     setWinner(null);
     setSpinning(true);
 
-    const winningIndex = Math.floor(Math.random() * prizes.length);
-    const sectionAngle = 360 / prizes.length;
+    const selectedPrize = getRandomPrize();
+    const winningIndex = wheelOrder.findIndex(
+      (prize) => prize.id === selectedPrize.id
+    );
 
-    // The pointer is at the top of the wheel.
-    // The wheel's first section is centered at the top.
+    // The centre of segment zero initially points upward.
     const targetAngle =
-      (360 - (winningIndex * sectionAngle + sectionAngle / 2)) % 360;
+      (360 - winningIndex * sectionAngle) % 360;
 
     const currentAngle = ((rotation % 360) + 360) % 360;
     const extraTurns = 5 * 360;
+
     const nextRotation =
       rotation +
       extraTurns +
@@ -42,9 +175,9 @@ export default function App() {
     setRotation(nextRotation);
 
     window.setTimeout(() => {
-      setWinner(prizes[winningIndex]);
+      setWinner(selectedPrize);
       setSpinning(false);
-    }, 5100);
+    }, 5200);
   }
 
   return (
@@ -60,43 +193,58 @@ export default function App() {
         <div className="decor decor-right">✧</div>
 
         <div className="intro">
-          <span className="eyebrow">A LITTLE FUN, A LITTLE MAGIC</span>
-          <h2>Spin & Win!</h2>
-          <p>Try your luck and discover your Bubble Jellyy surprise.</p>
+          <span className="eyebrow">
+            A LITTLE FUN, A LITTLE MAGIC
+          </span>
+          <h2>Spin &amp; Win!</h2>
+          <p>
+            Try your luck and discover your Bubble Jellyy
+            surprise.
+          </p>
         </div>
 
         <div className="wheel-area">
           <div className="pointer" />
 
           <div
-            className="wheel"
+            className={`wheel ${spinning ? "is-spinning" : ""}`}
             style={{
               transform: `rotate(${rotation}deg)`,
-              background: `conic-gradient(from -22.5deg, ${prizes
-                .map(
-                  (prize, index) =>
-                    `${prize.color} ${index * 45}deg ${(index + 1) * 45}deg`
-                )
-                .join(", ")})`,
+              background: wheelBackground,
+              "--spin-duration": "5.2s",
             }}
           >
-            {prizes.map((prize, index) => (
-              <div
-                className="wheel-label"
-                key={prize.label}
-                style={{ transform: `rotate(${index * 45}deg)` }}
-              >
-                <span className="prize-emoji">{prize.emoji}</span>
-                <span
-                  className="prize-name"
+            {wheelOrder.map((prize, index) => {
+              const angle = index * sectionAngle;
+
+              return (
+                <div
+                  className="wheel-label"
+                  key={prize.id}
                   style={{
-                    transform: `translateX(-50%) rotate(${-index * 45}deg)`,
+                    transform: `rotate(${angle}deg)`,
                   }}
                 >
-                  {prize.label}
-                </span>
-              </div>
-            ))}
+                  <span
+                    className="prize-emoji"
+                    style={{
+                      transform: `translateX(-50%) rotate(${-angle}deg)`,
+                    }}
+                  >
+                    {prize.emoji}
+                  </span>
+
+                  <span
+                    className="prize-name"
+                    style={{
+                      transform: `translateX(-50%) rotate(${-angle}deg)`,
+                    }}
+                  >
+                    {prize.label}
+                  </span>
+                </div>
+              );
+            })}
 
             <div className="wheel-center">
               <span className="center-icon">🧋</span>
@@ -112,22 +260,26 @@ export default function App() {
           onClick={spinWheel}
           disabled={spinning}
         >
-          {spinning ? (
-            <>✨ SPINNING...</>
-          ) : (
-            <>🎡 SPIN NOW</>
-          )}
+          {spinning ? "✨ SPINNING..." : "🎡 SPIN NOW"}
         </button>
 
         <p className="footnote">
           {spinning
             ? "Fingers crossed! Your surprise is on its way..."
-            : "One spin. Eight possibilities. Endless good vibes! 💗"}
+            : "One spin. Seven possibilities. Endless good vibes! 💗"}
+        </p>
+
+        <p className="friend-message">
+          visit with your friend next time
         </p>
 
         {winner && (
           <div className="result-overlay">
-            <div className="result-card" role="status">
+            <div
+              className="result-card"
+              role="status"
+              aria-live="polite"
+            >
               <button
                 className="result-close"
                 onClick={() => setWinner(null)}
@@ -137,9 +289,32 @@ export default function App() {
               </button>
 
               <div className="result-icon">{winner.emoji}</div>
-              <p className="result-eyebrow">YOUR LUCKY MOMENT</p>
+
+              <p className="result-eyebrow">
+                YOUR LUCKY MOMENT
+              </p>
+
               <h3>{winner.label}</h3>
-              <p className="result-message">{winner.result}</p>
+
+              <p className="result-message">
+                {winner.result}
+              </p>
+
+              {winner.id === "follow-discount" && (
+                <p className="claim-instructions">
+                  Follow @bubble_jellyy_ on Instagram and
+                  show us your follow to claim your discount.
+                </p>
+              )}
+
+              {winner.id === "story-discount" && (
+                <p className="claim-instructions">
+                  Follow @bubble_jellyy_ and add our shop to
+                  your Instagram Story. Show us your Story
+                  to claim your discount.
+                </p>
+              )}
+
               <p className="result-thanks">
                 Thanks for playing with Bubble Jellyy!
               </p>
